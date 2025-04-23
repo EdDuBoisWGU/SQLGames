@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SQL Space Mission</title>
+  <style>
+    body {
+      font-family: "Courier New", monospace;
+      background-color: #0b0c10;
+      color: #c5c6c7;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #66fcf1;
+    }
+    .terminal {
+      background-color: #1f2833;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      background-color: #0b0c10;
+      color: #66fcf1;
+      border: 1px solid #45a29e;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    button {
+      margin-top: 10px;
+      background-color: #45a29e;
+      color: #0b0c10;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #feedback {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 SQL Space Mission</h1>
+    <div id="story" class="terminal">
+      <p>Welcome, Commander. Your starship, the <strong>Odyssey</strong>, is stranded after a critical database failure. Complete each SQL task to repair key systems.</p>
+      <p><strong>Task 1:</strong> Retrieve all crew data.</p>
+      <pre><code>Table: crew  
+Columns: id (INT), name (TEXT), role (TEXT), status (TEXT)  
+Sample:  
+(1, 'Alice', 'Captain', 'Active')  
+(2, 'Bob', 'Engineer', 'Active')  
+(3, 'Charlie', 'Medic', 'Inactive')</code></pre>
+    </div>
+
+    <div class="terminal">
+      <label for="sqlInput"><strong>Enter SQL Command:</strong></label>
+      <textarea id="sqlInput" placeholder="e.g., SELECT * FROM crew;"></textarea>
+      <button onclick="checkSQL()">Run Query</button>
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = [
+      {
+        query: "SELECT * FROM crew;",
+        description: "Task 1: Retrieve all crew data.",
+        hint: `Table: crew\nColumns: id, name, role, status`
+      },
+      {
+        query: "SELECT name FROM crew WHERE role = 'Engineer';",
+        description: "Task 2: List names of all Engineers.",
+        hint: `crew(role = 'Engineer')`
+      },
+      {
+        query: "SELECT COUNT(*) FROM crew WHERE status = 'Active';",
+        description: "Task 3: Count all active crew members.",
+        hint: `crew(status = 'Active')`
+      },
+      {
+        query: "SELECT name FROM crew WHERE role = 'Medic' AND status = 'Active';",
+        description: "Task 4: Show active medics.",
+        hint: `crew(role = 'Medic', status = 'Active')`
+      },
+      {
+        query: "SELECT name, role FROM crew ORDER BY role ASC;",
+        description: "Task 5: Show all crew names and roles, sorted by role.",
+        hint: `ORDER BY role`
+      },
+      {
+        query: "SELECT DISTINCT role FROM crew;",
+        description: "Task 6: List all unique crew roles.",
+        hint: `DISTINCT role`
+      },
+      {
+        query: "SELECT name FROM crew WHERE name LIKE 'A%';",
+        description: "Task 7: Find crew whose names start with 'A'.",
+        hint: `LIKE 'A%'`
+      },
+      {
+        query: "SELECT name FROM crew WHERE role IN ('Captain', 'Engineer');",
+        description: "Task 8: Find names of captains and engineers.",
+        hint: `role IN (...)`
+      },
+      {
+        query: "SELECT * FROM crew WHERE id BETWEEN 1 AND 3;",
+        description: "Task 9: Retrieve crew with ID between 1 and 3.",
+        hint: `BETWEEN 1 AND 3`
+      },
+      {
+        query: "SELECT role, COUNT(*) FROM crew GROUP BY role;",
+        description: "Task 10: Count crew members by role.",
+        hint: `GROUP BY role`
+      }
+    ];
+
+    let currentTask = 0;
+
+    function checkSQL() {
+      const input = document.getElementById("sqlInput").value.trim().replace(/\s+/g, ' ').toUpperCase();
+      const correct = tasks[currentTask].query.trim().replace(/\s+/g, ' ').toUpperCase();
+
+      const feedback = document.getElementById("feedback");
+
+      if (input === correct) {
+        feedback.innerHTML = `<p style="color:lightgreen;">✅ Correct! Proceeding to next system repair...</p>`;
+        currentTask++;
+        if (currentTask < tasks.length) {
+          document.getElementById("story").innerHTML = `
+            <p><strong>${tasks[currentTask].description}</strong></p>
+            <pre><code>${tasks[currentTask].hint}</code></pre>
+          `;
+          document.getElementById("sqlInput").value = "";
+        } else {
+          document.getElementById("story").innerHTML = "<p>🎉 Mission accomplished! All navigation systems are restored. You're heading home!</p>";
+        }
+      } else {
+        feedback.innerHTML = `<p style="color:tomato;">❌ Incorrect. Check your syntax and try again.</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
